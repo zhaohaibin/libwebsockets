@@ -215,8 +215,10 @@ int lws_client_socket_service(struct libwebsocket_context *context,
 			if (n < 0) {
 				n = SSL_get_error(wsi->ssl, n);
 
-				if (n == SSL_ERROR_WANT_READ ||
-					n == SSL_ERROR_WANT_WRITE) {
+				if (n == SSL_ERROR_WANT_READ)
+					goto some_wait;
+
+				if (n == SSL_ERROR_WANT_WRITE) {
 					/*
 					 * wants us to retry connect due to
 					 * state of the underlying ssl layer...
@@ -231,10 +233,10 @@ int lws_client_socket_service(struct libwebsocket_context *context,
 					 */
 
 					lwsl_info(
-					     "SSL_connect WANT_... retrying\n");
+					     "SSL_connect WANT_WRITE... retrying\n");
 					libwebsocket_callback_on_writable(
 								  context, wsi);
-					
+some_wait:
 					wsi->mode = LWS_CONNMODE_WS_CLIENT_WAITING_SSL;
 					
 					return 0; /* no error */
@@ -276,8 +278,10 @@ int lws_client_socket_service(struct libwebsocket_context *context,
 				if (n < 0) {
 					n = SSL_get_error(wsi->ssl, n);
 					
-					if (n == SSL_ERROR_WANT_READ ||
-						n == SSL_ERROR_WANT_WRITE) {
+					if (n == SSL_ERROR_WANT_READ)
+						goto some_wait;
+
+					if (n == SSL_ERROR_WANT_WRITE) {
 						/*
 						 * wants us to retry connect due to
 						 * state of the underlying ssl layer...
@@ -291,14 +295,10 @@ int lws_client_socket_service(struct libwebsocket_context *context,
 						 * us to get called back when writable.
 						 */
 						
-						lwsl_info(
-								  "SSL_connect WANT_... retrying\n");
-						libwebsocket_callback_on_writable(
-														  context, wsi);
+						lwsl_info("SSL_connect WANT_WRITE... retrying\n");
+						libwebsocket_callback_on_writable(context, wsi);
 						
-						wsi->mode = LWS_CONNMODE_WS_CLIENT_WAITING_SSL;
-						
-						return 0; /* no error */
+						goto some_wait;
 					}
 					n = -1;
 				}
