@@ -646,6 +646,7 @@ int main(int argc, char **argv)
 					lwsl_notice("dumb %d: connecting\n", n);
 					i.protocol = protocols[PROTOCOL_DUMB_INCREMENT].name;
 					i.pwsi = &wsi_multi[n];
+					//连接到服务器
 					lws_client_connect_via_info(&i);
 				}
 			}
@@ -656,6 +657,7 @@ int main(int argc, char **argv)
 					lwsl_notice("dumb: connecting\n");
 					i.protocol = protocols[PROTOCOL_DUMB_INCREMENT].name;
 					i.pwsi = &wsi_dumb;
+					//连接到服务器
 					lws_client_connect_via_info(&i);
 				}
 
@@ -663,12 +665,14 @@ int main(int argc, char **argv)
 					lwsl_notice("mirror: connecting\n");
 					i.protocol = protocols[PROTOCOL_LWS_MIRROR].name;
 					i.pwsi = &wsi_mirror;
+					//连接到服务器
 					wsi_mirror = lws_client_connect_via_info(&i);
 				}
 			} else
 				if (!wsi_dumb && ratelimit_connects(&rl_dumb, 2u)) {
 					lwsl_notice("http: connecting\n");
 					i.pwsi = &wsi_dumb;
+					//连接到服务器
 					lws_client_connect_via_info(&i);
 				}
 		}
