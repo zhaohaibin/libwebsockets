@@ -93,6 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>../build/lib\Debug\websockets_static.lib;../build/lib\$(Configuration)\zlib_internal.lib;D:\third_party\openssl-1.0.0c\lib\ssleay32.lib;D:\third_party\openssl-1.0.0c\lib\libeay32.lib;ws2_32.lib;userenv.lib;psapi.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -143,7 +144,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commmon_data\common_data.cpp" />
+    <ClCompile Include="gettimeofday.c" />
+    <ClCompile Include="handler\http_handler.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commmon_data\common_data.h" />
+    <ClInclude Include="gettimeofday.h" />
+    <ClInclude Include="handler\http_handler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
